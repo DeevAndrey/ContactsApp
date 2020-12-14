@@ -29,11 +29,11 @@ namespace ContactsAppUI
                 contactsList.ArrContacts[i] = new PhoneContact("Deev", "Andrey", "deev.andre@mail.ru", "112334", BirthDate, 79521544043);
             }
 
-
+            string fileName = @"C:\R.G. Catalyst\json.txt";
             MenegProject MakeClass = new MenegProject();
-            contactsList = MakeClass.Load();
+            contactsList = MenegProject.Load(fileName);
             contactsList.ArrContacts[0].Surname = "YelkiIgolki";
-            MakeClass.Save(contactsList);
+            MenegProject.SaveToFile(contactsList, fileName);
         }
     }
 }
