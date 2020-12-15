@@ -97,7 +97,10 @@ namespace ContactsApp
         public PhoneNumber Number
             {
             get {return _number;}
-            set { _number = value; }
+            set
+            {
+                _number = value;
+            }
             }
         /// <summary>
         /// метод с использование свойств set/get для даты рождения
@@ -113,7 +116,7 @@ namespace ContactsApp
                     throw new ArgumentException("Год рождение не может быть меньше 1900");
                 }
                 else
-                {
+                {            this.Number = new PhoneNumber();
                     _birthDate = value;
                 }
             }
