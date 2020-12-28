@@ -11,6 +11,10 @@ namespace ContactsApp
     /// </summary>
     public class Project
     {
-       public PhoneContact[] ArrContacts;
+        public List<PhoneContact> ArrContacts;
+        public Project()
+            {
+            ArrContacts = new List<PhoneContact>(200);
+            }
     }
 }

@@ -20,7 +20,7 @@ namespace ContactsApp
             get { return _number; }
             set
             {                
-                if (value >= 70000000000 && value <= 79999999999)
+                if ((value >= 70000000000 && value <= 79999999999) || (value == 0))
                 {
                     _number = value;
                 }

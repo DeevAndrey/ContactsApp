@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ContactsApp;
@@ -12,15 +13,24 @@ namespace ContactsAppUI
 {
     public partial class ContactsForm : Form
     {
-        
-        private List<PhoneContact> _contacts = new List<PhoneContact>();
+        private int _countContacts = 0; // количеств
+        private int index; // индекс к которому обращаемся при вызове окне edit/add
+        string fileName = @"C:\R.G. Catalyst\json.txt"; // куда сохраняем данные
+        private Project _allContacts = new Project(); // контакты которые мы сохраняем 
+        private BindingList<PhoneContact> _formList;  //обновляющийся список
+
         public ContactsForm()
         {
             InitializeComponent();
             this.Text = "ContactApp";
             this.Size = new Size(800, 600);
             
-
+            if (File.Exists(fileName)) // проверяем существует ли файл с данными 
+            {
+               _allContacts = MenegProject.Load(fileName);
+                _countContacts = _allContacts.ArrContacts.Count;
+            }
+            textBoxCountAcc.Text = _countContacts.ToString();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -31,14 +41,38 @@ namespace ContactsAppUI
 
         private void addContactToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            EditForm aboutForm = new EditForm();
-            aboutForm.ShowDialog();
+            
+                        EditForm editForm = new EditForm(); //создаем окно
+                       
+                        editForm.ShowDialog(); // открываем 
+
+            if (editForm.Contact != null)
+            {
+                _allContacts.ArrContacts.Add(new PhoneContact()); // выделяем память под новую запись
+                _allContacts.ArrContacts[_countContacts] = editForm.Contact;
+                _countContacts++;
+                ContactsListBox.Items.Add(editForm.Contact.Surname);
+                textBoxCountAcc.Text = _countContacts.ToString();
+            }
         }
+
+
 
         private void editToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            EditForm aboutForm = new EditForm();
-            aboutForm.ShowDialog();
+            if (ContactsListBox.SelectedIndex >= 0 && ContactsListBox.SelectedIndex < _countContacts)
+            {
+                index = ContactsListBox.SelectedIndex;
+                EditForm editForm = new EditForm();
+                editForm.Contact = _allContacts.ArrContacts[ContactsListBox.SelectedIndex];
+                editForm.ShowDialog();
+                if (editForm.Contact != null)
+                {
+                    _allContacts.ArrContacts[ContactsListBox.SelectedIndex] = editForm.Contact;
+                    ContactsListBox.Items.RemoveAt(index);
+                    ContactsListBox.Items.Insert(index, editForm.Contact.Surname);
+                }
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -57,28 +91,81 @@ namespace ContactsAppUI
 
         private void AddButton_Click(object sender, EventArgs e)
         {
-            PhoneContact newContact = new PhoneContact();
-            newContact.Name = SurnameTextBox.Text;
-            newContact.Number = new PhoneNumber(); 
-            newContact.Number.SetNumber = Convert.ToInt64(PhoneTextBox.Text);
-            newContact.Emal = EmailTextBox.Text;
-            _contacts.Add(newContact);
-            ContactsListBox.Items.Add(newContact.Name);
+            EditForm editForm = new EditForm(); //создаем окно
 
+            editForm.ShowDialog(); // открываем 
+
+            if (editForm.Contact != null)
+            {
+                _allContacts.ArrContacts.Add(new PhoneContact()); // выделяем память под новую запись
+                _allContacts.ArrContacts[_countContacts] = editForm.Contact;
+                _countContacts++;
+                ContactsListBox.Items.Add(editForm.Contact.Surname);
+                textBoxCountAcc.Text = _countContacts.ToString();
+            }
+        }
+
+        private void RemoveButton_Click(object sender, EventArgs e)
+        {
+            ContactsListBox.Items.Remove(ContactsListBox.SelectedItem);
+            _allContacts.ArrContacts.Remove(_allContacts.ArrContacts[ContactsListBox.SelectedIndex]);
+            _countContacts--;
+            textBoxCountAcc.Text = _countContacts.ToString();
+        }
+
+        private void ContactsForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MenegProject.SaveToFile(_allContacts, fileName);
+        }
+
+        private void ContactsForm_Load(object sender, EventArgs e)
+        {           
+                _formList = new BindingList<PhoneContact>(_allContacts.ArrContacts);
+                for (int i=0;i<_formList.Count;i++)
+                {
+                    ContactsListBox.Items.Add(_allContacts.ArrContacts[i].Surname);
+                }
+        }
+
+        private void ContactsListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            if (ContactsListBox.SelectedIndex == -1) { ContactsListBox.SelectedIndex = index; }
+            NameTextBox.Text = _allContacts.ArrContacts[ContactsListBox.SelectedIndex].Name;
+            SurnameTextBox.Text = _allContacts.ArrContacts[ContactsListBox.SelectedIndex].Surname;
+            dateBirthDay.Value = _allContacts.ArrContacts[ContactsListBox.SelectedIndex].BirthDate;
+            EmailTextBox.Text = _allContacts.ArrContacts[ContactsListBox.SelectedIndex].Emal;
+            VKtextBox.Text = _allContacts.ArrContacts[ContactsListBox.SelectedIndex].idVK;
+            PhoneTextBox.Text = _allContacts.ArrContacts[ContactsListBox.SelectedIndex].Number.SetNumber.ToString();
+
+        }
+
+        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ContactsListBox.SelectedIndex >= 0 && ContactsListBox.SelectedIndex < _countContacts)
+            {
+                ContactsListBox.Items.Remove(ContactsListBox.SelectedItem);
+                _allContacts.ArrContacts.Remove(_allContacts.ArrContacts[ContactsListBox.SelectedIndex]);
+                _countContacts--;
+                textBoxCountAcc.Text = _countContacts.ToString();
+            }
+        }
+
+        private void EditButton_Click(object sender, EventArgs e)
+        {
+            if (ContactsListBox.SelectedIndex >= 0 && ContactsListBox.SelectedIndex < _countContacts)
+            {
+                index = ContactsListBox.SelectedIndex;
+                EditForm editForm = new EditForm();
+                editForm.Contact = _allContacts.ArrContacts[ContactsListBox.SelectedIndex];
+                editForm.ShowDialog();
+                if (editForm.Contact != null)
+                {
+                    _allContacts.ArrContacts[ContactsListBox.SelectedIndex] = editForm.Contact;
+                    ContactsListBox.Items.RemoveAt(index);
+                    ContactsListBox.Items.Insert(index, editForm.Contact.Surname);
+                }
+            }
         }
     }
 }
-    /*        DateTime BirthDate = new DateTime(1999, 12, 16);
-            var contactsList = new Project();
-
-            contactsList.ArrContacts = new PhoneContact[5];
-            for (int i=0; i < 5; i++)
-            {
-                contactsList.ArrContacts[i] = new PhoneContact("Deev", "Andrey", "deev.andre@mail.ru", "112334", BirthDate, 79521544043);
-            }
-
-            string fileName = @"C:\R.G. Catalyst\json.txt";
-            MenegProject MakeClass = new MenegProject();
-            contactsList = MenegProject.Load(fileName);
-            contactsList.ArrContacts[0].Surname = "YelkiIgolki";
-            MenegProject.SaveToFile(contactsList, fileName);*/

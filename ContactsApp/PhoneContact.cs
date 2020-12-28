@@ -60,7 +60,7 @@ namespace ContactsApp
             get { return _email; }
             set
             {
-                if (value.Length > 50)
+                if (value.Length > 50 && value != null)
                 {
                     throw new ArgumentException("Почта не может быть больше 50 символов");
                 }
@@ -79,7 +79,7 @@ namespace ContactsApp
             get { return _idVK; }
             set
             {
-                if (value.Length > 15)
+                if (value.Length > 15 && value != null)
                 {
                     throw new ArgumentException("id в VK не может быть больше 15 символов");
                 }
@@ -96,11 +96,8 @@ namespace ContactsApp
         /// </summary>
         public PhoneNumber Number
             {
-            get {return _number;}
-            set
-            {
-                _number = value;
-            }
+            get { return _number; }
+            set { _number = value; }
             }
         /// <summary>
         /// метод с использование свойств set/get для даты рождения
@@ -111,19 +108,19 @@ namespace ContactsApp
             set
             {
                 DateTime curDate = DateTime.Now;
-                if (value.Year < 1900 && value > curDate)
+                if (value.Year < 1900 && value > curDate && value != null)
                 {
                     throw new ArgumentException("Год рождение не может быть меньше 1900");
                 }
                 else
-                {            this.Number = new PhoneNumber();
+                {       
                     _birthDate = value;
                 }
             }
         }
      public PhoneContact()
         {
-
+            
         }
         /// <summary>
         /// конструктор со всеми полями класса
