@@ -52,7 +52,8 @@ namespace ContactsAppUI
             {
                 GlobalCheck = false;
             }
-            if (NameTextBox.Text != null && SurnameTextBox.Text != null && MaskPhoneBox.Text.Length == 12 && GlobalCheck == false)
+            if (NameTextBox.Text != null && SurnameTextBox.Text != null && MaskPhoneBox.Text.Length == 12 && GlobalCheck == false
+                && NameTextBox.Text != string.Empty && SurnameTextBox.Text != string.Empty)
             {
                 _contact = new PhoneContact();
                 _contact.Number = new PhoneNumber();

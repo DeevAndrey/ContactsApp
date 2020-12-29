@@ -24,7 +24,11 @@ namespace ContactsApp
                 {
                     throw new ArgumentException("Фамилия не может быть больше 50 символов");
                 }
-                else
+                else if(value == string.Empty || value == null)
+                {
+                    throw new ArgumentException("Фамилия не может быть без букв");
+                }
+                else 
                 {
                     value = value.Substring(0, 1).ToUpper() + value.Remove(0, 1);
                     _surname = value;
@@ -44,7 +48,11 @@ namespace ContactsApp
                 {
                     throw new ArgumentException("Имя не может быть больше 50 символов");
                 }
-                else
+                else if (value == null || value == string.Empty)
+                {
+                    throw new ArgumentException("Имя не может быть из пустой строки");
+                }
+                else 
                 {
                     value = value.Substring(0, 1).ToUpper() + value.Remove(0, 1);
                     _name = value;
@@ -108,9 +116,9 @@ namespace ContactsApp
             set
             {
                 DateTime curDate = DateTime.Now;
-                if (value.Year < 1900 && value > curDate && value != null)
+                if (value.Year < 1900 || value > curDate || value == null)
                 {
-                    throw new ArgumentException("Год рождение не может быть меньше 1900");
+                    throw new ArgumentException("Некорректная дата ");
                 }
                 else
                 {       
