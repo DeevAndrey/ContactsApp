@@ -30,6 +30,13 @@ namespace ContactsAppUI
                _allContacts = MenegProject.Load(fileName);
                 _countContacts = _allContacts.ArrContacts.Count;
             }
+            DateTime curDate = DateTime.Now;
+            BirthLabel.Text = "У них сегодня день рождение: ";
+            for (int i=0; i<Project.FindBirthDay(_allContacts, curDate).ArrContacts.Count; i++)
+            {
+                BirthLabel.Text += Project.FindBirthDay(_allContacts, curDate).ArrContacts[i].Surname+", ";
+            }
+           
             textBoxCountAcc.Text = _countContacts.ToString();
         }
 
@@ -51,7 +58,7 @@ namespace ContactsAppUI
                 _allContacts.ArrContacts.Add(new PhoneContact()); // выделяем память под новую запись
                 _allContacts.ArrContacts[_countContacts] = editForm.Contact;
                 _countContacts++;
-                ContactsListBox.Items.Add(editForm.Contact.Surname);
+                UpdateListBox();
                 textBoxCountAcc.Text = _countContacts.ToString();
             }
         }
@@ -69,8 +76,7 @@ namespace ContactsAppUI
                 if (editForm.Contact != null)
                 {
                     _allContacts.ArrContacts[ContactsListBox.SelectedIndex] = editForm.Contact;
-                    ContactsListBox.Items.RemoveAt(index);
-                    ContactsListBox.Items.Insert(index, editForm.Contact.Surname);
+                    UpdateListBox();
                 }
             }
         }
@@ -87,6 +93,16 @@ namespace ContactsAppUI
                 AboutForm aboutForm = new AboutForm();
                 aboutForm.ShowDialog();
             }
+            if (e.KeyValue == (char)Keys.Delete)
+            {
+                if (ContactsListBox.SelectedIndex >= 0 && ContactsListBox.SelectedIndex < _countContacts)
+                {
+                    ContactsListBox.Items.Remove(ContactsListBox.SelectedItem);
+                    _allContacts.ArrContacts.Remove(_allContacts.ArrContacts[ContactsListBox.SelectedIndex]);
+                    _countContacts--;
+                    textBoxCountAcc.Text = _countContacts.ToString();
+                }
+            }
         }
 
         private void AddButton_Click(object sender, EventArgs e)
@@ -100,7 +116,7 @@ namespace ContactsAppUI
                 _allContacts.ArrContacts.Add(new PhoneContact()); // выделяем память под новую запись
                 _allContacts.ArrContacts[_countContacts] = editForm.Contact;
                 _countContacts++;
-                ContactsListBox.Items.Add(editForm.Contact.Surname);
+                UpdateListBox();
                 textBoxCountAcc.Text = _countContacts.ToString();
             }
         }
@@ -119,7 +135,8 @@ namespace ContactsAppUI
         }
 
         private void ContactsForm_Load(object sender, EventArgs e)
-        {           
+        {
+                _allContacts = Project.SortArr(_allContacts);
                 _formList = new BindingList<PhoneContact>(_allContacts.ArrContacts);
                 for (int i=0;i<_formList.Count;i++)
                 {
@@ -162,10 +179,31 @@ namespace ContactsAppUI
                 if (editForm.Contact != null)
                 {
                     _allContacts.ArrContacts[ContactsListBox.SelectedIndex] = editForm.Contact;
-                    ContactsListBox.Items.RemoveAt(index);
-                    ContactsListBox.Items.Insert(index, editForm.Contact.Surname);
+                    UpdateListBox();
+
                 }
             }
         }
+        private void UpdateListBox()
+        {
+            _allContacts = Project.SortArr(_allContacts);
+            ContactsListBox.Items.Clear();
+            for (int i = 0; i < _allContacts.ArrContacts.Count; i++)
+            {
+                ContactsListBox.Items.Add(_allContacts.ArrContacts[i].Surname);
+            }
+        }
+
+        private void FindTextBox_TextChanged(object sender, EventArgs e)
+        {
+            
+            ContactsListBox.Items.Clear();
+            for (int i = 0; i < Project.FindArr(_allContacts,FindTextBox.Text).ArrContacts.Count; i++)
+            {
+                ContactsListBox.Items.Add(Project.FindArr(_allContacts, FindTextBox.Text).ArrContacts[i].Surname);
+            }
+        }
+
+
     }
 }

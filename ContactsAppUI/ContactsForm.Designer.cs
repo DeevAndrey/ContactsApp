@@ -60,6 +60,7 @@ namespace ContactsAppUI
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.textBoxCountAcc = new System.Windows.Forms.TextBox();
             this.CountAcc = new System.Windows.Forms.Label();
+            this.BirthLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -205,6 +206,7 @@ namespace ContactsAppUI
             this.FindTextBox.Name = "FindTextBox";
             this.FindTextBox.Size = new System.Drawing.Size(184, 20);
             this.FindTextBox.TabIndex = 14;
+            this.FindTextBox.TextChanged += new System.EventHandler(this.FindTextBox_TextChanged);
             // 
             // menuStrip1
             // 
@@ -247,21 +249,21 @@ namespace ContactsAppUI
             // addContactToolStripMenuItem
             // 
             this.addContactToolStripMenuItem.Name = "addContactToolStripMenuItem";
-            this.addContactToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addContactToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.addContactToolStripMenuItem.Text = "Add Contact";
             this.addContactToolStripMenuItem.Click += new System.EventHandler(this.addContactToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem1
             // 
             this.editToolStripMenuItem1.Name = "editToolStripMenuItem1";
-            this.editToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.editToolStripMenuItem1.Size = new System.Drawing.Size(141, 22);
             this.editToolStripMenuItem1.Text = "Edit";
             this.editToolStripMenuItem1.Click += new System.EventHandler(this.editToolStripMenuItem1_Click);
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
@@ -366,11 +368,22 @@ namespace ContactsAppUI
             this.CountAcc.TabIndex = 21;
             this.CountAcc.Text = "Количество аккаунтов";
             // 
+            // BirthLabel
+            // 
+            this.BirthLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.BirthLabel.AutoSize = true;
+            this.BirthLabel.Location = new System.Drawing.Point(232, 359);
+            this.BirthLabel.Name = "BirthLabel";
+            this.BirthLabel.Size = new System.Drawing.Size(35, 13);
+            this.BirthLabel.TabIndex = 22;
+            this.BirthLabel.Text = "label1";
+            // 
             // ContactsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(673, 424);
+            this.Controls.Add(this.BirthLabel);
             this.Controls.Add(this.CountAcc);
             this.Controls.Add(this.textBoxCountAcc);
             this.Controls.Add(this.tableLayoutPanel1);
@@ -430,6 +443,7 @@ namespace ContactsAppUI
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TextBox textBoxCountAcc;
         private System.Windows.Forms.Label CountAcc;
+        private System.Windows.Forms.Label BirthLabel;
     }
 }
 
